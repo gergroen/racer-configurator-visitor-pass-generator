@@ -6,13 +6,12 @@
 <PageTitle>Wigorama Event Registration</PageTitle>
 
 <div class="container">
-    <div class="header">
-        <h1>Wigorama Event Registration</h1>
-        <p>Register for the Wigorama event and get your visitor pass</p>
-    </div>
-
     @if (string.IsNullOrEmpty(qrCodeBase64))
     {
+        <div class="header">
+            <h1>Wigorama Event Registration</h1>
+            <p>Register for the Wigorama event and get your visitor pass</p>
+        </div>
         <!-- Registration Form -->
         <div class="registration-form">
             <h2>Register for Event</h2>
