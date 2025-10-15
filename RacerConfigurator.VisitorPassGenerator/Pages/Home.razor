@@ -1,0 +1,108 @@
+﻿@page "/"
+@using RacerConfigurator.VisitorPassGenerator.Models
+@using RacerConfigurator.VisitorPassGenerator.Services
+@inject QrCodeService QrCodeService
+
+<PageTitle>Wigorama Event Registration</PageTitle>
+
+<div class="container">
+    <div class="header">
+        <h1>Wigorama Event Registration</h1>
+        <p>Register for the Wigorama event and get your visitor pass</p>
+    </div>
+
+    @if (string.IsNullOrEmpty(qrCodeBase64))
+    {
+        <!-- Registration Form -->
+        <div class="registration-form">
+            <h2>Register for Event</h2>
+            <EditForm Model="@visitorData" OnValidSubmit="@GenerateVisitorPass">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <InputText @bind-Value="visitorData.Name" class="form-control" id="name" placeholder="Enter your full name" />
+                    <ValidationMessage For="@(() => visitorData.Name)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <InputText @bind-Value="visitorData.Email" class="form-control" id="email" placeholder="Enter your email address" />
+                    <ValidationMessage For="@(() => visitorData.Email)" />
+                </div>
+
+                <button type="submit" class="register-btn" disabled="@isProcessing">
+                    @if (isProcessing)
+                    {
+                        <span>Generating Pass...</span>
+                    }
+                    else
+                    {
+                        <span>Register & Generate Pass</span>
+                    }
+                </button>
+            </EditForm>
+        </div>
+    }
+    else
+    {
+        <!-- Visitor Pass -->
+        <div class="visitor-pass">
+            <div class="pass-header">
+                <h2>Wigorama Event</h2>
+                <p>Visitor Pass</p>
+            </div>
+            
+            <div class="pass-content">
+                <div class="visitor-info">
+                    <h3>@visitorData.Name</h3>
+                    <p>@visitorData.Email</p>
+                </div>
+                
+                <div class="qr-section">
+                    <div class="qr-code">
+                        <img src="data:image/png;base64,@qrCodeBase64" alt="QR Code for visitor pass" />
+                    </div>
+                    <p class="qr-instruction">Present this QR code at the event entrance</p>
+                </div>
+            </div>
+            
+            <div class="pass-footer">
+                <button @onclick="StartOver" class="start-over-btn">Register Another Visitor</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private VisitorData visitorData = new();
+    private string qrCodeBase64 = string.Empty;
+    private bool isProcessing = false;
+
+    private async Task GenerateVisitorPass()
+    {
+        if (string.IsNullOrWhiteSpace(visitorData.Name) || string.IsNullOrWhiteSpace(visitorData.Email))
+            return;
+
+        isProcessing = true;
+        StateHasChanged();
+
+        try
+        {
+            await Task.Delay(500); // Small delay for better UX
+            qrCodeBase64 = QrCodeService.GenerateQrCodeBase64(visitorData);
+        }
+        finally
+        {
+            isProcessing = false;
+            StateHasChanged();
+        }
+    }
+
+    private void StartOver()
+    {
+        visitorData = new VisitorData();
+        qrCodeBase64 = string.Empty;
+    }
+}

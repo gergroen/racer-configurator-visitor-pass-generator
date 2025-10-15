@@ -1,0 +1,622 @@
+/* ======================================
+   WIGO•IT RACING THEME - VISITOR PASS GENERATOR
+   ====================================== */
+
+@font-face {
+    font-family: 'Neue Machina';
+    src: url('../fonts/PPNeueMachina-PlainRegular.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ======================================
+   CSS CUSTOM PROPERTIES (WIGO•IT PALETTE)
+   ====================================== */
+:root {
+    /* WIGO•IT Racing Color Palette */
+    --wigo-yellow: #F2E55C;
+    --wigo-blue-primary: #4A5FBF;
+    --wigo-blue-secondary: #2C3E73;
+    --wigo-coral: #FF6B6B;
+    --wigo-coral-light: #FF8E8E;
+    --wigo-green: #4CAF50;
+    --wigo-green-light: #81C784;
+    --wigo-pink: #E91E63;
+    --wigo-orange: #FF9800;
+    --wigo-teal: #009688;
+    --wigo-purple: #9C27B0;
+    --wigo-white: #FFFFFF;
+    --wigo-light-gray: #F5F5F5;
+    --wigo-gray: #9E9E9E;
+    --wigo-dark-gray: #424242;
+    --wigo-black: #212121;
+    
+    /* WIGO•IT Gradients */
+    --wigo-primary-gradient: linear-gradient(135deg, var(--wigo-blue-primary) 0%, var(--wigo-blue-secondary) 100%);
+    --wigo-coral-gradient: linear-gradient(135deg, var(--wigo-coral) 0%, var(--wigo-coral-light) 100%);
+    --wigo-green-gradient: linear-gradient(135deg, var(--wigo-green) 0%, var(--wigo-green-light) 100%);
+    --wigo-flame-gradient: linear-gradient(135deg, var(--wigo-coral) 0%, var(--wigo-orange) 50%, var(--wigo-yellow) 100%);
+    
+    /* Typography */
+    --wigo-font-primary: 'Neue Machina', Tahoma, Geneva, Verdana, sans-serif;
+    --wigo-font-display: 'Neue Machina', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Global Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    background-image: url('/images/StartScreenBackground.png');
+    background-size: auto;
+    background-position: top left;
+    background-repeat: repeat;
+    background-attachment: scroll;
+    background-color: var(--wigo-yellow);
+    min-height: 100%;
+}
+
+body {
+    background: transparent;
+    color: var(--wigo-black);
+    font-family: var(--wigo-font-primary);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    font-weight: 400;
+    min-height: 100vh;
+}
+
+#app {
+    background: transparent;
+    min-height: 100vh;
+}
+
+/* Loading Styles - WIGO•IT Racing Theme */
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    color: var(--wigo-blue-primary);
+    position: relative;
+}
+
+.loading-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(242, 229, 92, 0.95);
+    z-index: 998;
+    backdrop-filter: blur(2px);
+}
+
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 4px solid var(--wigo-light-gray);
+    border-top: 4px solid var(--wigo-blue-primary);
+    border-radius: 50%;
+    animation: wigo-loading-spin 1.5s linear infinite;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 999;
+    filter: drop-shadow(0 0 8px rgba(74, 95, 191, 0.4));
+}
+
+.loading-spinner::before {
+    content: '🏎️';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    z-index: 1000;
+}
+
+.loading-text {
+    font-family: var(--wigo-font-display);
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--wigo-blue-primary);
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px 24px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    border: 2px solid var(--wigo-blue-primary);
+    position: relative;
+    z-index: 999;
+    animation: wigo-pulse 1.5s ease-in-out infinite;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+@keyframes wigo-loading-spin {
+    0% { 
+        transform: rotate(0deg); 
+        border-top-color: var(--wigo-blue-primary);
+    }
+    25% { 
+        border-top-color: var(--wigo-coral);
+    }
+    50% { 
+        border-top-color: var(--wigo-green);
+    }
+    75% { 
+        border-top-color: var(--wigo-orange);
+    }
+    100% { 
+        transform: rotate(360deg); 
+        border-top-color: var(--wigo-blue-primary);
+    }
+}
+
+@keyframes wigo-pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.02);
+    }
+}
+
+/* Blazor Error UI - WIGO•IT Style */
+#blazor-error-ui {
+    background: var(--wigo-coral);
+    bottom: 0;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.1);
+    display: none;
+    left: 0;
+    padding: 0.8rem 1.5rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+    color: var(--wigo-white);
+    font-weight: 600;
+    border-radius: 8px 8px 0 0;
+    font-family: var(--wigo-font-primary);
+}
+
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--wigo-white);
+    font-size: 1.2rem;
+}
+
+#blazor-error-ui .reload {
+    color: var(--wigo-white);
+    text-decoration: underline;
+    font-weight: 700;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+/* Header Styles - WIGO•IT Racing Theme */
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    animation: slideInDown 0.8s ease-out;
+}
+
+.header h1 {
+    font-family: var(--wigo-font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    color: var(--wigo-blue-primary);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px 30px;
+    border-radius: 20px;
+    backdrop-filter: blur(10px);
+    border: 3px solid var(--wigo-blue-primary);
+    box-shadow: 0 8px 32px rgba(74, 95, 191, 0.2);
+}
+
+.header p {
+    font-family: var(--wigo-font-primary);
+    font-size: 1.2rem;
+    margin: 0;
+    color: var(--wigo-blue-secondary);
+    font-weight: 600;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 12px 24px;
+    border-radius: 15px;
+    backdrop-filter: blur(5px);
+    border: 2px solid var(--wigo-blue-secondary);
+}
+
+/* Registration Form Styles - WIGO•IT Racing Theme */
+.registration-form {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    backdrop-filter: blur(15px);
+    border: 3px solid var(--wigo-blue-primary);
+    animation: slideInUp 0.8s ease-out;
+}
+
+.registration-form h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--wigo-blue-primary);
+    font-size: 1.8rem;
+    font-family: var(--wigo-font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--wigo-blue-secondary);
+    font-size: 1rem;
+    font-family: var(--wigo-font-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid var(--wigo-light-gray);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: var(--wigo-font-primary);
+    transition: all 0.3s ease;
+    background: var(--wigo-white);
+    color: var(--wigo-black);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--wigo-blue-primary);
+    background: var(--wigo-white);
+    box-shadow: 0 0 0 4px rgba(74, 95, 191, 0.1);
+    transform: translateY(-1px);
+}
+
+.register-btn {
+    width: 100%;
+    padding: 16px 24px;
+    background: var(--wigo-primary-gradient);
+    color: var(--wigo-white);
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    font-family: var(--wigo-font-display);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.register-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.register-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(74, 95, 191, 0.4);
+}
+
+.register-btn:hover:not(:disabled)::before {
+    left: 100%;
+}
+
+.register-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Visitor Pass Styles - WIGO•IT Racing Theme */
+.visitor-pass {
+    background: rgba(255, 255, 255, 0.98);
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.2);
+    border: 3px solid var(--wigo-blue-primary);
+    max-width: 650px;
+    margin: 0 auto;
+    animation: slideInUp 0.8s ease-out;
+    position: relative;
+}
+
+.visitor-pass::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--wigo-flame-gradient);
+    z-index: 1;
+}
+
+.pass-header {
+    background: var(--wigo-primary-gradient);
+    color: var(--wigo-white);
+    padding: 35px;
+    text-align: center;
+    position: relative;
+}
+
+.pass-header::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 18px solid transparent;
+    border-right: 18px solid transparent;
+    border-top: 12px solid var(--wigo-blue-secondary);
+}
+
+.pass-header h2 {
+    font-family: var(--wigo-font-display);
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.pass-header p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.pass-content {
+    padding: 45px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(245,245,245,0.5) 100%);
+}
+
+.visitor-info {
+    text-align: center;
+    margin-bottom: 35px;
+    width: 100%;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 16px;
+    border: 2px solid var(--wigo-light-gray);
+}
+
+.visitor-info h3 {
+    font-family: var(--wigo-font-display);
+    font-size: 1.9rem;
+    color: var(--wigo-blue-primary);
+    margin-bottom: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.visitor-info p {
+    color: var(--wigo-blue-secondary);
+    font-size: 1.1rem;
+    font-weight: 600;
+    font-family: var(--wigo-font-primary);
+}
+
+.qr-section {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    padding: 30px;
+    border: 3px solid var(--wigo-blue-primary);
+    width: 100%;
+    max-width: 320px;
+    position: relative;
+}
+
+.qr-section::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: var(--wigo-flame-gradient);
+    border-radius: 20px;
+    z-index: -1;
+}
+
+.qr-code {
+    display: inline-block;
+    padding: 20px;
+    background: var(--wigo-white);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+    border: 2px solid var(--wigo-light-gray);
+}
+
+.qr-code img {
+    display: block;
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.qr-instruction {
+    color: var(--wigo-blue-secondary);
+    font-size: 0.95rem;
+    font-style: italic;
+    margin: 0;
+    font-weight: 600;
+    font-family: var(--wigo-font-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pass-footer {
+    padding: 30px;
+    text-align: center;
+    background: var(--wigo-light-gray);
+    border-top: 3px solid var(--wigo-blue-primary);
+}
+
+.start-over-btn {
+    padding: 14px 28px;
+    background: var(--wigo-coral-gradient);
+    color: var(--wigo-white);
+    border: none;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 700;
+    font-family: var(--wigo-font-display);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.start-over-btn:hover {
+    background: var(--wigo-coral);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 107, 107, 0.3);
+}
+
+/* Validation Styles - WIGO•IT Theme */
+.validation-errors {
+    background: var(--wigo-coral-gradient);
+    border: 2px solid var(--wigo-coral);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 20px;
+    color: var(--wigo-white);
+    font-weight: 600;
+    font-family: var(--wigo-font-primary);
+}
+
+.field-validation-error {
+    color: var(--wigo-coral);
+    font-size: 0.875rem;
+    margin-top: 5px;
+    display: block;
+    font-weight: 600;
+    font-family: var(--wigo-font-primary);
+}
+
+.form-control.input-validation-error {
+    border-color: var(--wigo-coral);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+/* Animations */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .header h1 {
+        font-size: 2rem;
+        padding: 15px 20px;
+    }
+    
+    .header p {
+        font-size: 1rem;
+        padding: 10px 16px;
+    }
+    
+    .registration-form {
+        padding: 25px;
+    }
+    
+    .pass-content {
+        padding: 25px;
+    }
+    
+    .qr-code img {
+        max-width: 150px;
+    }
+    
+    .qr-section {
+        max-width: 280px;
+    }
+    
+    .visitor-info h3 {
+        font-size: 1.5rem;
+    }
+    
+    .pass-header h2 {
+        font-size: 1.8rem;
+    }
+}
